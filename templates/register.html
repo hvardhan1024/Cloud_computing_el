@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Register - Portfolio App</title>
+  </head>
+  <body>
+    <h1>Register</h1>
+
+    <nav>
+      <a href="/">Home</a> | <a href="/register">Register</a> |
+      <a href="/login">Login</a>
+    </nav>
+
+    <h2>Create Account</h2>
+
+    <form method="POST">
+      <div>
+        <label for="email">Email:</label><br />
+        <input type="email" id="email" name="email" required />
+      </div>
+      <br />
+      <div>
+        <label for="password">Password:</label><br />
+        <input type="password" id="password" name="password" required />
+      </div>
+      <br />
+      <button type="submit">Register</button>
+    </form>
+
+    <p>Already have an account? <a href="/login">Login here</a></p>
+
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div>
+      {% for message in messages %}
+      <p style="color: red">{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+  </body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard - Portfolio App</title>
+  </head>
+  <body>
+    <h1>Dashboard</h1>
+
+    <nav>
+      <a href="/">Home</a> | <a href="/dashboard">Dashboard</a> |
+      <a href="/portfolio/{{ user.email }}">View My Portfolio</a>
+    </nav>
+
+    <p>Welcome, {{ user.email }}!</p>
+
+    <form method="POST" action="/logout">
+      <button type="submit">Logout</button>
+    </form>
+
+    <h2>Manage Your Profile</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+      <div>
+        <label for="bio">Bio:</label><br />
+        <textarea id="bio" name="bio" rows="4" cols="50">
+{% if profile %}{{ profile.bio }}{% endif %}</textarea
+        >
+      </div>
+      <br />
+
+      <div>
+        <label for="github_url">GitHub URL:</label><br />
+        <input
+          type="url"
+          id="github_url"
+          name="github_url"
+          value="{% if profile %}{{ profile.github_url }}{% endif %}"
+        />
+      </div>
+      <br />
+
+      <div>
+        <label for="linkedin_url">LinkedIn URL:</label><br />
+        <input
+          type="url"
+          id="linkedin_url"
+          name="linkedin_url"
+          value="{% if profile %}{{ profile.linkedin_url }}{% endif %}"
+        />
+      </div>
+      <br />
+
+      <div>
+        <label for="projects">Projects (comma-separated):</label><br />
+        <textarea id="projects" name="projects" rows="3" cols="50">
+{% if profile %}{{ profile.projects }}{% endif %}</textarea
+        >
+      </div>
+      <br />
+
+      <div>
+        <label for="image">Profile Image:</label><br />
+        <input type="file" id="image" name="image" accept="image/*" />
+        {% if profile and profile.image_url %}
+        <br /><small
+          >Current image:
+          <a href="{{ profile.image_url }}" target="_blank">View</a></small
+        >
+        {% endif %}
+      </div>
+      <br />
+
+      <div>
+        <label for="resume">Resume (PDF):</label><br />
+        <input type="file" id="resume" name="resume" accept=".pdf" />
+        {% if profile and profile.resume_url %}
+        <br /><small
+          >Current resume:
+          <a href="{{ profile.resume_url }}" target="_blank">View</a></small
+        >
+        {% endif %}
+      </div>
+      <br />
+
+      <button type="submit">Save Profile</button>
+    </form>
+
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div>
+      {% for message in messages %}
+      <p style="color: green">{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %} {% if profile %}
+    <h3>Preview</h3>
+    <p><strong>Bio:</strong> {{ profile.bio }}</p>
+    {% if profile.github_url %}
+    <p>
+      <strong>GitHub:</strong>
+      <a href="{{ profile.github_url }}" target="_blank"
+        >{{ profile.github_url }}</a
+      >
+    </p>
+    {% endif %} {% if profile.linkedin_url %}
+    <p>
+      <strong>LinkedIn:</strong>
+      <a href="{{ profile.linkedin_url }}" target="_blank"
+        >{{ profile.linkedin_url }}</a
+      >
+    </p>
+    {% endif %} {% if profile.projects %}
+    <p><strong>Projects:</strong> {{ profile.projects }}</p>
+    {% endif %} {% if profile.image_url %}
+    <p>
+      <strong>Image:</strong>
+      <img src="{{ profile.image_url }}" width="100" alt="Profile Image" />
+    </p>
+    {% endif %} {% endif %}
+  </body>
+</html>

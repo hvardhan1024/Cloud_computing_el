@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Portfolio App - All Portfolios</title>
+  </head>
+  <body>
+    <h1>Portfolio App</h1>
+
+    <nav>
+      <a href="/">Home</a> | <a href="/register">Register</a> |
+      <a href="/login">Login</a> |
+      <a href="/dashboard">Dashboard</a>
+    </nav>
+
+    {% if session.user_email %}
+    <p>Welcome, {{ session.user_email }}!</p>
+    <form method="POST" action="/logout">
+      <button type="submit">Logout</button>
+    </form>
+    {% endif %}
+
+    <h2>All Portfolios</h2>
+
+    {% if users %}
+    <ul>
+      {% for user in users %}
+      <li>
+        <strong>{{ user.email }}</strong> -
+        <a href="/portfolio/{{ user.email }}">View Portfolio</a>
+        {% if user.profile.bio %}
+        <br /><em>{{ user.profile.bio[:100] }}...</em>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>
+      No portfolios available yet. <a href="/register">Register</a> to create
+      your portfolio!
+    </p>
+    {% endif %} {% with messages = get_flashed_messages() %} {% if messages %}
+    <div>
+      {% for message in messages %}
+      <p style="color: red">{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+  </body>
+</html>

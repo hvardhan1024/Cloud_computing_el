@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ user.email }} - Portfolio</title>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Home</a> | <a href="/register">Register</a> |
+      <a href="/login">Login</a>
+    </nav>
+
+    <h1>{{ user.email }}'s Portfolio</h1>
+
+    {% if profile.image_url %}
+    <img src="{{ profile.image_url }}" width="200" alt="Profile Image" />
+    <br /><br />
+    {% endif %} {% if profile.bio %}
+    <h2>About Me</h2>
+    <p>{{ profile.bio }}</p>
+    {% endif %}
+
+    <h2>Contact</h2>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+
+    {% if profile.github_url %}
+    <p>
+      <strong>GitHub:</strong>
+      <a href="{{ profile.github_url }}" target="_blank"
+        >{{ profile.github_url }}</a
+      >
+    </p>
+    {% endif %} {% if profile.linkedin_url %}
+    <p>
+      <strong>LinkedIn:</strong>
+      <a href="{{ profile.linkedin_url }}" target="_blank"
+        >{{ profile.linkedin_url }}</a
+      >
+    </p>
+    {% endif %} {% if projects %}
+    <h2>Projects</h2>
+    <ul>
+      {% for project in projects %}
+      <li>{{ project }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% if profile.resume_url %}
+    <h2>Resume</h2>
+    <p>
+      <a href="{{ profile.resume_url }}" target="_blank"
+        >Download Resume (PDF)</a
+      >
+    </p>
+    {% endif %}
+
+    <br /><br />
+    <p>
+      <small
+        >Portfolio created on: {{ profile.updated_at.strftime('%B %d, %Y')
+        }}</small
+      >
+    </p>
+
+    <p><a href="/">← Back to All Portfolios</a></p>
+  </body>
+</html>
