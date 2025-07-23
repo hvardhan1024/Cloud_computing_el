@@ -186,6 +186,51 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+@app.route('/health')
+def health_check():
+    results = {}
+    
+    # Check RDS / Database
+    try:
+        db.session.execute("SELECT 1")
+        results['rds'] = '✅ RDS is connected and responsive.'
+    except Exception as e:
+        results['rds'] = f'❌ RDS check failed: {str(e)}'
+
+    # Check S3 Bucket Access
+    try:
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=config.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY,
+            region_name=config.AWS_REGION
+        )
+        response = s3.list_objects_v2(Bucket=config.S3_BUCKET, MaxKeys=1)
+        results['s3'] = f"✅ S3 bucket '{config.S3_BUCKET}' is accessible."
+    except ClientError as e:
+        results['s3'] = f"❌ S3 access failed: {e.response['Error']['Message']}"
+    except Exception as e:
+        results['s3'] = f"❌ S3 access failed: {str(e)}"
+
+    # EC2 Metadata (only works inside EC2)
+    try:
+        import requests
+        instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", timeout=2).text
+        az = requests.get("http://169.254.169.254/latest/meta-data/placement/availability-zone", timeout=2).text
+        public_ip = requests.get("http://169.254.169.254/latest/meta-data/public-ipv4", timeout=2).text
+
+        results['ec2'] = f"✅ EC2 instance running (ID: {instance_id}, AZ: {az}, Public IP: {public_ip})"
+    except Exception as e:
+        results['ec2'] = f"⚠️ EC2 metadata access failed: {str(e)}"
+
+    # Print to console and return
+    print("\n--- Health Check Summary ---")
+    for service, status in results.items():
+        print(f"{service.upper()}: {status}")
+
+    return "<br>".join(f"<strong>{key.upper()}</strong>: {value}" for key, value in results.items())
+
+
 # Create tables
 with app.app_context():
     db.create_all()
