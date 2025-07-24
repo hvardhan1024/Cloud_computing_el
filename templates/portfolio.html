@@ -1,65 +1,443 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>{{ user.email }} - Portfolio</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Portfolio App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "github-bg": "#0d1117",
+              "github-card": "#161b22",
+              "github-border": "#30363d",
+              "github-text": "#f0f6fc",
+              "github-text-secondary": "#8b949e",
+              "github-accent": "#58a6ff",
+              "github-success": "#3fb950",
+              "github-warning": "#d29922",
+              "github-danger": "#f85149",
+            },
+            backdropBlur: {
+              xs: "2px",
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #0d1117;
+        background-image: radial-gradient(
+            circle at 25% 25%,
+            rgba(88, 166, 255, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 75% 75%,
+            rgba(63, 185, 80, 0.08) 0%,
+            transparent 50%
+          );
+      }
+
+      .glass {
+        background: rgba(22, 27, 34, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(48, 54, 61, 0.5);
+      }
+
+      .glass-light {
+        background: rgba(22, 27, 34, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(48, 54, 61, 0.3);
+      }
+
+      .glass-button {
+        background: rgba(88, 166, 255, 0.1);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(88, 166, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .glass-button:hover {
+        background: rgba(88, 166, 255, 0.2);
+        border-color: rgba(88, 166, 255, 0.4);
+        transform: translateY(-1px);
+      }
+
+      .glass-success {
+        background: rgba(63, 185, 80, 0.1);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(63, 185, 80, 0.2);
+      }
+
+      .glass-success:hover {
+        background: rgba(63, 185, 80, 0.2);
+        border-color: rgba(63, 185, 80, 0.4);
+      }
+
+      .glass-danger {
+        background: rgba(248, 81, 73, 0.1);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(248, 81, 73, 0.2);
+      }
+
+      .glass-danger:hover {
+        background: rgba(248, 81, 73, 0.2);
+        border-color: rgba(248, 81, 73, 0.4);
+      }
+
+      .glass-input {
+        background: rgba(22, 27, 34, 0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border: 1px solid rgba(48, 54, 61, 0.5);
+      }
+
+      .glass-input:focus {
+        background: rgba(22, 27, 34, 0.7);
+        border-color: rgba(88, 166, 255, 0.5);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
+      }
+    </style>
   </head>
-  <body>
-    <nav>
-      <a href="/">Home</a> | <a href="/register">Register</a> |
-      <a href="/login">Login</a>
+
+  <body class="min-h-screen text-github-text font-sans">
+    <!-- Fixed Navigation Bar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 glass border-b border-github-border"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <h1 class="text-xl font-bold text-github-accent">Portfolio</h1>
+          </div>
+          <div class="hidden md:flex items-center space-x-6">
+            <a
+              href="/"
+              class="text-github-text hover:text-github-accent transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium"
+              >Home</a
+            >
+            <a
+              href="/register"
+              class="text-github-text hover:text-github-accent transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium"
+              >Register</a
+            >
+            <a
+              href="/login"
+              class="text-github-text hover:text-github-accent transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium"
+              >Login</a
+            >
+          </div>
+          <!-- Mobile menu button -->
+          <div class="md:hidden">
+            <button
+              type="button"
+              class="glass-button text-github-text hover:text-github-accent p-2 rounded-md"
+            >
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <!-- Mobile menu -->
+        <div
+          class="md:hidden border-t border-github-border mt-2 pt-2 pb-3 space-y-1"
+        >
+          <a
+            href="/"
+            class="block text-github-text hover:text-github-accent px-3 py-2 rounded-md text-base font-medium"
+            >Home</a
+          >
+          <a
+            href="/register"
+            class="block text-github-text hover:text-github-accent px-3 py-2 rounded-md text-base font-medium"
+            >Register</a
+          >
+          <a
+            href="/login"
+            class="block text-github-text hover:text-github-accent px-3 py-2 rounded-md text-base font-medium"
+            >Login</a
+          >
+        </div>
+      </div>
     </nav>
 
-    <h1>{{ user.email }}'s Portfolio</h1>
+    <!-- Main Content -->
+    <main class="pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <div class="glass rounded-lg p-8 mb-8 shadow-xl text-center">
+          <div class="flex flex-col items-center">
+            {% if profile.image_url %}
+            <img
+              src="{{ profile.image_url }}"
+              class="w-32 h-32 rounded-full mb-6 border-4 border-github-border shadow-lg object-cover"
+              alt="Profile Image"
+            />
+            {% endif %}
+            <h1 class="text-3xl font-bold text-github-text mb-2">
+              {{ user.email }}'s Portfolio
+            </h1>
+            <div class="w-24 h-1 bg-github-accent rounded-full"></div>
+          </div>
+        </div>
 
-    {% if profile.image_url %}
-    <img src="{{ profile.image_url }}" width="200" alt="Profile Image" />
-    <br /><br />
-    {% endif %} {% if profile.bio %}
-    <h2>About Me</h2>
-    <p>{{ profile.bio }}</p>
-    {% endif %}
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Main Content -->
+          <div class="lg:col-span-2 space-y-8">
+            {% if profile.bio %}
+            <!-- About Me Section -->
+            <div class="glass rounded-lg p-6 shadow-xl">
+              <h2
+                class="text-xl font-bold text-github-text mb-4 flex items-center"
+              >
+                <svg
+                  class="w-6 h-6 text-github-accent mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  ></path>
+                </svg>
+                About Me
+              </h2>
+              <p class="text-github-text leading-relaxed">{{ profile.bio }}</p>
+            </div>
+            {% endif %} {% if projects %}
+            <!-- Projects Section -->
+            <div class="glass rounded-lg p-6 shadow-xl">
+              <h2
+                class="text-xl font-bold text-github-text mb-4 flex items-center"
+              >
+                <svg
+                  class="w-6 h-6 text-github-accent mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  ></path>
+                </svg>
+                Projects
+              </h2>
+              <div class="grid gap-3">
+                {% for project in projects %}
+                <div
+                  class="glass-light rounded-md p-4 transition-all duration-200 hover:shadow-md"
+                >
+                  <div class="flex items-center">
+                    <svg
+                      class="w-4 h-4 text-github-success mr-3 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                    <span class="text-github-text">{{ project }}</span>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %} {% if profile.resume_url %}
+            <!-- Resume Section -->
+            <div class="glass rounded-lg p-6 shadow-xl">
+              <h2
+                class="text-xl font-bold text-github-text mb-4 flex items-center"
+              >
+                <svg
+                  class="w-6 h-6 text-github-accent mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  ></path>
+                </svg>
+                Resume
+              </h2>
+              <a
+                href="{{ profile.resume_url }}"
+                target="_blank"
+                class="glass-button text-github-accent hover:text-white px-6 py-3 rounded-md font-medium transition-all duration-200 inline-flex items-center"
+              >
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  ></path>
+                </svg>
+                Download Resume (PDF)
+              </a>
+            </div>
+            {% endif %}
+          </div>
 
-    <h2>Contact</h2>
-    <p><strong>Email:</strong> {{ user.email }}</p>
+          <!-- Sidebar -->
+          <div class="lg:col-span-1 space-y-6">
+            <!-- Contact Information -->
+            <div class="glass rounded-lg p-6 shadow-xl">
+              <h3
+                class="text-lg font-semibold text-github-text mb-4 flex items-center"
+              >
+                <svg
+                  class="w-5 h-5 text-github-accent mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 8l7.89 4.26c.3.16.67.16.97 0L19 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  ></path>
+                </svg>
+                Contact
+              </h3>
+              <div class="space-y-3">
+                <div class="flex items-center">
+                  <svg
+                    class="w-4 h-4 text-github-text-secondary mr-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                    ></path>
+                  </svg>
+                  <span class="text-github-text text-sm">{{ user.email }}</span>
+                </div>
 
-    {% if profile.github_url %}
-    <p>
-      <strong>GitHub:</strong>
-      <a href="{{ profile.github_url }}" target="_blank"
-        >{{ profile.github_url }}</a
-      >
-    </p>
-    {% endif %} {% if profile.linkedin_url %}
-    <p>
-      <strong>LinkedIn:</strong>
-      <a href="{{ profile.linkedin_url }}" target="_blank"
-        >{{ profile.linkedin_url }}</a
-      >
-    </p>
-    {% endif %} {% if projects %}
-    <h2>Projects</h2>
-    <ul>
-      {% for project in projects %}
-      <li>{{ project }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %} {% if profile.resume_url %}
-    <h2>Resume</h2>
-    <p>
-      <a href="{{ profile.resume_url }}" target="_blank"
-        >Download Resume (PDF)</a
-      >
-    </p>
-    {% endif %}
+                {% if profile.github_url %}
+                <div class="flex items-center">
+                  <svg
+                    class="w-4 h-4 text-github-text-secondary mr-3"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                    />
+                  </svg>
+                  <a
+                    href="{{ profile.github_url }}"
+                    target="_blank"
+                    class="text-github-accent hover:underline text-sm break-all"
+                    >GitHub Profile</a
+                  >
+                </div>
+                {% endif %} {% if profile.linkedin_url %}
+                <div class="flex items-center">
+                  <svg
+                    class="w-4 h-4 text-github-text-secondary mr-3"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                    />
+                  </svg>
+                  <a
+                    href="{{ profile.linkedin_url }}"
+                    target="_blank"
+                    class="text-github-accent hover:underline text-sm break-all"
+                    >LinkedIn Profile</a
+                  >
+                </div>
+                {% endif %}
+              </div>
+            </div>
 
-    <br /><br />
-    <p>
-      <small
-        >Portfolio created on: {{ profile.updated_at.strftime('%B %d, %Y')
-        }}</small
-      >
-    </p>
+            <!-- Portfolio Info -->
+            <div class="glass rounded-lg p-6 shadow-xl">
+              <h3 class="text-lg font-semibold text-github-text mb-4">
+                Portfolio Info
+              </h3>
+              <div class="space-y-2 text-sm text-github-text-secondary">
+                <p>Created on:</p>
+                <p class="text-github-text font-medium">
+                  {{ profile.updated_at.strftime('%B %d, %Y') }}
+                </p>
+              </div>
+            </div>
 
-    <p><a href="/">← Back to All Portfolios</a></p>
+            <!-- Navigation -->
+            <div class="glass rounded-lg p-6 shadow-xl">
+              <a
+                href="/"
+                class="glass-button text-github-accent hover:text-white px-4 py-3 rounded-md font-medium transition-all duration-200 w-full text-center inline-flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  ></path>
+                </svg>
+                Back to All Portfolios
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   </body>
 </html>

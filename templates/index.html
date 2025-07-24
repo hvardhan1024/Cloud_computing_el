@@ -1,47 +1,414 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfolio App - All Portfolios</title>
-  </head>
-  <body>
-    <h1>Portfolio App</h1>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "github-bg": "#0d1117",
+              "github-card": "#161b22",
+              "github-border": "#30363d",
+              "github-text": "#f0f6fc",
+              "github-text-secondary": "#8b949e",
+              "github-accent": "#58a6ff",
+              "github-success": "#3fb950",
+              "github-warning": "#d29922",
+              "github-danger": "#f85149",
+            },
+            backdropBlur: {
+              xs: "2px",
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #0d1117;
+        background-image: radial-gradient(
+            circle at 25% 25%,
+            rgba(88, 166, 255, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 75% 75%,
+            rgba(63, 185, 80, 0.08) 0%,
+            transparent 50%
+          );
+      }
 
-    <nav>
-      <a href="/">Home</a> | <a href="/register">Register</a> |
-      <a href="/login">Login</a> |
-      <a href="/dashboard">Dashboard</a>
+      .glass {
+        background: rgba(22, 27, 34, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(48, 54, 61, 0.5);
+      }
+
+      .glass-light {
+        background: rgba(22, 27, 34, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(48, 54, 61, 0.3);
+      }
+
+      .glass-button {
+        background: rgba(88, 166, 255, 0.1);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(88, 166, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .glass-button:hover {
+        background: rgba(88, 166, 255, 0.2);
+        border-color: rgba(88, 166, 255, 0.4);
+        transform: translateY(-1px);
+      }
+
+      .glass-danger {
+        background: rgba(248, 81, 73, 0.1);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(248, 81, 73, 0.2);
+      }
+
+      .glass-danger:hover {
+        background: rgba(248, 81, 73, 0.2);
+        border-color: rgba(248, 81, 73, 0.4);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-github-text font-sans">
+    <!-- Fixed Navigation Bar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 glass border-b border-github-border"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <h1 class="text-xl font-bold text-github-accent">Portfolio App</h1>
+          </div>
+          <div class="hidden md:flex items-center space-x-6">
+            <a
+              href="/"
+              class="text-github-text hover:text-github-accent transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium"
+              >Home</a
+            >
+            <a
+              href="/register"
+              class="text-github-text hover:text-github-accent transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium"
+              >Register</a
+            >
+            <a
+              href="/login"
+              class="text-github-text hover:text-github-accent transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium"
+              >Login</a
+            >
+            <a
+              href="/dashboard"
+              class="text-github-text hover:text-github-accent transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium"
+              >Dashboard</a
+            >
+          </div>
+          <!-- Mobile menu button -->
+          <div class="md:hidden">
+            <button
+              type="button"
+              class="glass-button text-github-text hover:text-github-accent p-2 rounded-md"
+            >
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <!-- Mobile menu -->
+        <div
+          class="md:hidden border-t border-github-border mt-2 pt-2 pb-3 space-y-1"
+        >
+          <a
+            href="/"
+            class="block text-github-text hover:text-github-accent px-3 py-2 rounded-md text-base font-medium"
+            >Home</a
+          >
+          <a
+            href="/register"
+            class="block text-github-text hover:text-github-accent px-3 py-2 rounded-md text-base font-medium"
+            >Register</a
+          >
+          <a
+            href="/login"
+            class="block text-github-text hover:text-github-accent px-3 py-2 rounded-md text-base font-medium"
+            >Login</a
+          >
+          <a
+            href="/dashboard"
+            class="block text-github-text hover:text-github-accent px-3 py-2 rounded-md text-base font-medium"
+            >Dashboard</a
+          >
+        </div>
+      </div>
     </nav>
 
-    {% if session.user_email %}
-    <p>Welcome, {{ session.user_email }}!</p>
-    <form method="POST" action="/logout">
-      <button type="submit">Logout</button>
-    </form>
-    {% endif %}
-
-    <h2>All Portfolios</h2>
-
-    {% if users %}
-    <ul>
-      {% for user in users %}
-      <li>
-        <strong>{{ user.email }}</strong> -
-        <a href="/portfolio/{{ user.email }}">View Portfolio</a>
-        {% if user.profile.bio %}
-        <br /><em>{{ user.profile.bio[:100] }}...</em>
+    <!-- Main Content -->
+    <main class="pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <!-- User Welcome Section -->
+        {% if session.user_email %}
+        <div class="glass rounded-lg p-6 mb-8 shadow-xl">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div class="mb-4 sm:mb-0">
+              <p class="text-lg text-github-text">
+                Welcome,
+                <span class="text-github-accent font-semibold"
+                  >{{ session.user_email }}</span
+                >!
+              </p>
+            </div>
+            <form method="POST" action="/logout">
+              <button
+                type="submit"
+                class="glass-danger text-github-danger hover:text-white px-4 py-2 rounded-md font-medium transition-all duration-200"
+              >
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
         {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>
-      No portfolios available yet. <a href="/register">Register</a> to create
-      your portfolio!
-    </p>
-    {% endif %} {% with messages = get_flashed_messages() %} {% if messages %}
-    <div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Main Portfolio List -->
+          <div class="lg:col-span-2">
+            <div class="glass rounded-lg p-6 shadow-xl">
+              <h2
+                class="text-2xl font-bold text-github-text mb-6 flex items-center"
+              >
+                <svg
+                  class="w-8 h-8 text-github-accent mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  ></path>
+                </svg>
+                All Portfolios
+              </h2>
+
+              {% if users %}
+              <div class="space-y-4">
+                {% for user in users %}
+                <div
+                  class="glass-light rounded-lg p-5 transition-all duration-200 hover:shadow-lg hover:scale-[1.02]"
+                >
+                  <div
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div class="flex-1">
+                      <h3 class="text-lg font-semibold text-github-text mb-2">
+                        {{ user.email }}
+                      </h3>
+                      {% if user.profile.bio %}
+                      <p
+                        class="text-github-text-secondary text-sm mb-3 leading-relaxed"
+                      >
+                        {{ user.profile.bio[:100] }}...
+                      </p>
+                      {% endif %}
+                    </div>
+                    <div class="mt-3 sm:mt-0 sm:ml-4">
+                      <a
+                        href="/portfolio/{{ user.email }}"
+                        class="glass-button text-github-accent hover:text-white px-4 py-2 rounded-md font-medium transition-all duration-200 inline-flex items-center"
+                      >
+                        <svg
+                          class="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          ></path>
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          ></path>
+                        </svg>
+                        View Portfolio
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="text-center py-12">
+                <svg
+                  class="mx-auto h-16 w-16 text-github-text-secondary mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  ></path>
+                </svg>
+                <h3 class="text-lg font-medium text-github-text mb-2">
+                  No portfolios available yet
+                </h3>
+                <p class="text-github-text-secondary mb-6">
+                  Be the first to create your portfolio and showcase your work!
+                </p>
+                <a
+                  href="/register"
+                  class="glass-button text-github-accent hover:text-white px-6 py-3 rounded-md font-medium transition-all duration-200 inline-flex items-center"
+                >
+                  <svg
+                    class="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    ></path>
+                  </svg>
+                  Register to Create Portfolio
+                </a>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="lg:col-span-1">
+            <div class="glass rounded-lg p-6 shadow-xl mb-6">
+              <h3
+                class="text-lg font-semibold text-github-text mb-4 flex items-center"
+              >
+                <svg
+                  class="w-6 h-6 text-github-accent mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                Quick Actions
+              </h3>
+              <div class="space-y-3">
+                <a
+                  href="/register"
+                  class="block glass-button text-github-accent hover:text-white px-4 py-3 rounded-md font-medium transition-all duration-200 text-center"
+                >
+                  Create Account
+                </a>
+                <a
+                  href="/login"
+                  class="block glass-button text-github-accent hover:text-white px-4 py-3 rounded-md font-medium transition-all duration-200 text-center"
+                >
+                  Sign In
+                </a>
+                <a
+                  href="/dashboard"
+                  class="block glass-button text-github-accent hover:text-white px-4 py-3 rounded-md font-medium transition-all duration-200 text-center"
+                >
+                  Dashboard
+                </a>
+              </div>
+            </div>
+
+            <!-- Stats Card -->
+            <div class="glass rounded-lg p-6 shadow-xl">
+              <h3 class="text-lg font-semibold text-github-text mb-4">
+                Platform Stats
+              </h3>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-github-text-secondary"
+                    >Total Portfolios</span
+                  >
+                  <span class="text-github-accent font-semibold"
+                    >{% if users %}{{ users|length }}{% else %}0{% endif
+                    %}</span
+                  >
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-github-text-secondary">Active Users</span>
+                  <span class="text-github-success font-semibold"
+                    >{% if users %}{{ users|length }}{% else %}0{% endif
+                    %}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="fixed bottom-4 right-4 z-50 space-y-2">
       {% for message in messages %}
-      <p style="color: red">{{ message }}</p>
+      <div class="glass-danger rounded-lg p-4 shadow-xl max-w-sm">
+        <div class="flex items-center">
+          <svg
+            class="w-5 h-5 text-github-danger mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <p class="text-github-danger font-medium">{{ message }}</p>
+        </div>
+      </div>
       {% endfor %}
     </div>
     {% endif %} {% endwith %}
