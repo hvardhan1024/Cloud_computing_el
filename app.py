@@ -6,6 +6,7 @@ from botocore.exceptions import ClientError
 import config
 import os
 from datetime import datetime
+from sqlalchemy import text
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config.SECRET_KEY
@@ -14,13 +15,24 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# S3 client initialization
-s3_client = boto3.client(
-    's3',
-    aws_access_key_id=config.AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY,
-    region_name=config.AWS_REGION
-)
+# S3 client initialization - supports both IAM roles and explicit credentials
+try:
+    if config.AWS_ACCESS_KEY_ID and config.AWS_SECRET_ACCESS_KEY:
+        # Use explicit credentials
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=config.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY,
+            region_name=config.AWS_REGION
+        )
+        print("S3 client initialized with explicit credentials")
+    else:
+        # Use IAM role (recommended for EC2)
+        s3_client = boto3.client('s3', region_name=config.AWS_REGION)
+        print("S3 client initialized with IAM role")
+except Exception as e:
+    print(f"Warning: Failed to initialize S3 client: {e}")
+    s3_client = None
 
 # Models
 class User(db.Model):
@@ -46,7 +58,7 @@ class Profile(db.Model):
 
 # Helper function to upload files to S3
 def upload_to_s3(file, folder):
-    if not file:
+    if not file or not s3_client:
         return None
     
     timestamp = int(datetime.utcnow().timestamp())
@@ -61,13 +73,18 @@ def upload_to_s3(file, folder):
             ExtraArgs={'ACL': 'public-read'}
         )
         return f"https://{config.S3_BUCKET}.s3.{config.AWS_REGION}.amazonaws.com/{s3_key}"
-    except ClientError:
+    except ClientError as e:
+        print(f"S3 upload error: {e}")
         return None
 
 # Routes
 @app.route('/')
 def index():
-    users_with_profiles = db.session.query(User).join(Profile).all()
+    try:
+        users_with_profiles = db.session.query(User).join(Profile).all()
+    except Exception as e:
+        print(f"Database query error: {e}")
+        users_with_profiles = []
     return render_template('index.html', users=users_with_profiles)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -192,21 +209,22 @@ def health_check():
     
     # Check RDS / Database
     try:
-        db.session.execute("SELECT 1")
+        db.session.execute(text("SELECT 1"))
+        db.session.commit()
         results['rds'] = '✅ RDS is connected and responsive.'
     except Exception as e:
         results['rds'] = f'❌ RDS check failed: {str(e)}'
 
     # Check S3 Bucket Access
     try:
-        s3 = boto3.client(
-            's3',
-            aws_access_key_id=config.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY,
-            region_name=config.AWS_REGION
-        )
-        response = s3.list_objects_v2(Bucket=config.S3_BUCKET, MaxKeys=1)
-        results['s3'] = f"✅ S3 bucket '{config.S3_BUCKET}' is accessible."
+        if not s3_client:
+            results['s3'] = "❌ S3 client not initialized"
+        elif not config.S3_BUCKET:
+            results['s3'] = "❌ S3 bucket name not configured"
+        else:
+            # Test S3 access
+            response = s3_client.list_objects_v2(Bucket=config.S3_BUCKET, MaxKeys=1)
+            results['s3'] = f"✅ S3 bucket '{config.S3_BUCKET}' is accessible."
     except ClientError as e:
         results['s3'] = f"❌ S3 access failed: {e.response['Error']['Message']}"
     except Exception as e:
@@ -230,10 +248,13 @@ def health_check():
 
     return "<br>".join(f"<strong>{key.upper()}</strong>: {value}" for key, value in results.items())
 
-
 # Create tables
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+        print("✅ Database tables created successfully")
+    except Exception as e:
+        print(f"❌ Failed to create database tables: {e}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)

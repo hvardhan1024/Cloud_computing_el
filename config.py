@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-12345')
 FLASK_ENV = os.getenv('FLASK_ENV', 'development')
 FLASK_DEBUG = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 
-# AWS Configuration
+# AWS Configuration - Support both explicit credentials and IAM roles
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_REGION = os.getenv('AWS_REGION', 'ap-south-1')
